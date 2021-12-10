@@ -41,4 +41,13 @@ public class OrderService {
 
         return orderInfo;
     }
+
+    public OrderInfo getOrderInfo(long userId,long goodsId){
+        return orderMapper.getOrderInfo(userId,goodsId);
+    }
+
+
+    public SeckillOrder getOrderByUserIdGoodsId(long userId,long goodsId){
+        return orderMapper.getOrderByUserIdGoodsId(userId,goodsId);
+    }
 }

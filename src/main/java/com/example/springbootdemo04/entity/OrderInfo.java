@@ -5,19 +5,20 @@ import lombok.ToString;
 
 import java.util.Date;
 
+/**
+ * 订单详细信息
+ */
 @Data
 @ToString
 public class OrderInfo {
 
     private Long id;
+    //订单用户 判断是否只秒杀一次
     private Long userId;
+    //订单物品
     private Long goodsId;
- //   private Long  deliveryAddrId;
     private String goodsName;
     private Integer goodsCount;
     private Double goodsPrice;
-    //  private Integer orderChannel;
-    //private Integer status;
     private Date createDate;
- //   private Date payDate;
 }

@@ -1,4 +1,4 @@
-package com.example.springbootdemo04.mapper;
+package com.example.springbootdemo04.rabbitmq;
 
 import com.example.springbootdemo04.entity.OrderInfo;
 import org.junit.jupiter.api.Test;
@@ -10,13 +10,13 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class OrderMapperTest {
+class MQSenderTest {
 
     @Autowired
-    OrderMapper orderMapper;
+    MQSender mqSender;
 
     @Test
-    void insertOrderInfo() {
+    void sendTopic() {
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId((long)12345666);
         orderInfo.setGoodsId((long)1);
@@ -24,17 +24,8 @@ class OrderMapperTest {
         orderInfo.setCreateDate(new Date());
         orderInfo.setGoodsPrice(1234.00);
         orderInfo.setGoodsCount(1);
-        int i = orderMapper.insertOrderInfo(orderInfo);
-        System.out.println(i);
-    }
-
-    @Test
-    void insertOrder() {
-    }
-
-    @Test
-    void getOrderInfo() {
-        OrderInfo orderInfo = orderMapper.getOrderInfo(1,3);
         System.out.println(orderInfo.toString());
+        mqSender.sendTopic(orderInfo);
+
     }
 }

@@ -22,6 +22,17 @@ spring:
 #    testOnReturn: false
 #    poolPreparedStatements: true
 #    maxOpenPreparedStatements: 20
+#rabbitmq
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        auto-startup: true
+        acknowledge-mode: auto
 
 
   thymeleaf:
@@ -33,7 +44,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    timeout: 10
+    timeout: 5000
 
 
 mybatis:

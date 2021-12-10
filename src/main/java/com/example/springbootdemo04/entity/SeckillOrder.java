@@ -2,6 +2,9 @@ package com.example.springbootdemo04.entity;
 
 import lombok.Data;
 
+/**
+ * 秒杀订单
+ */
 @Data
 public class SeckillOrder {
 

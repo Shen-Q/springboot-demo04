@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,8 +17,6 @@ public class User implements Serializable {
     private String nickname;
     private String password;
     private String salt;
-    private String head;
-    private Date registerDate;
-    private Date lastLoginDate;
-    private Integer loginCount;
+    private Date createTime;
+    private Date updateTime;
 }

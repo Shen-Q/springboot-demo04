@@ -17,4 +17,14 @@
         insert into sk_order (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId});
     </insert>
 
+    <select id="getOrderByUserIdGoodsId" resultType="com.example.springbootdemo04.entity.SeckillOrder">
+        select * from sk_order where user_id = #{userId} and goods_id = #{goodsId};
+    </select>
+
+
+    <select id="getOrderInfo" resultType="com.example.springbootdemo04.entity.OrderInfo">
+        select id,user_id,goods_id,goods_name, goods_count, goods_price, create_date
+        from sk_order_info where user_id = #{userId} and goods_id = #{goodsId};
+    </select>
+
 </mapper>

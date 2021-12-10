@@ -1,12 +1,20 @@
 package com.example.springbootdemo04.controller;
 
 import com.example.springbootdemo04.entity.OrderInfo;
+import com.example.springbootdemo04.entity.SeckillOrder;
+import com.example.springbootdemo04.rabbitmq.MQConfig;
+import com.example.springbootdemo04.rabbitmq.MQReceiver;
+import com.example.springbootdemo04.rabbitmq.MQSender;
 import com.example.springbootdemo04.redis.GoodsKey;
 import com.example.springbootdemo04.service.GoodsService;
+import com.example.springbootdemo04.service.OrderService;
 import com.example.springbootdemo04.service.RedisService;
 import com.example.springbootdemo04.service.SeckillService;
 import com.example.springbootdemo04.vo.GoodsVO;
 import com.example.springbootdemo04.vo.LoginVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +29,8 @@ import java.util.List;
 @RequestMapping("/seckill")
 public class SeckillController implements InitializingBean {
 
+    private static Logger log = LoggerFactory.getLogger(SeckillController.class);
+
     @Autowired
     GoodsService goodsService;
 
@@ -29,6 +39,12 @@ public class SeckillController implements InitializingBean {
 
     @Autowired
     SeckillService seckillService;
+
+    @Autowired
+    MQSender sender;
+
+    @Autowired
+    OrderService orderService;
 
     //做标记，判断是否重复下单
     private HashMap<Long, Boolean> localOverMap = new HashMap<Long, Boolean>();
@@ -53,17 +69,30 @@ public class SeckillController implements InitializingBean {
       //  if(over){
       //      return "";
       //  }
-        GoodsVO goodsVO = goodsService.getGoodsVOByGoodsId(goodsId);
+        GoodsVO goodsVO = goodsService.getGoodsVOByGoodsId(goodsId);//这句是用来传给html页面的
         LoginVO loginVO = (LoginVO) session.getAttribute("loginUser");
-        OrderInfo orderInfo = seckillService.seckill(loginVO,goodsVO);
-        if(orderInfo!=null) {
-            model.addAttribute("goods",goodsVO);
-            model.addAttribute("orderInfo",orderInfo);
-            return "order_detail";
-        }else{
-            return "seckill_fail";
-        }
+     //加入RabbitMQ后，这里不能直接调用秒杀了，要传数据给queue才行
+//         OrderInfo orderInfo = seckillService.seckill(loginVO,goodsVO);
 
+        //传数据给queue信道
+        SeckillOrder seckillOrder = new SeckillOrder();
+        seckillOrder.setUserId(Long.valueOf(loginVO.getMobile()));
+        seckillOrder.setGoodsId(goodsId);
+        sender.sendSeckillMessage(seckillOrder);
+      //不对啊 应该取到消息自动处理  receiver.receive(seckillOrder);
+        int i=0;
+        while(i<5) {
+//            wait(1000);
+            OrderInfo orderInfo = orderService.getOrderInfo(seckillOrder.getUserId(), goodsId);
+            if (orderInfo != null) {
+                log.info("第"+i+"次时取数据成功，跳转。");
+                model.addAttribute("goods", goodsVO);
+                model.addAttribute("orderInfo", orderInfo);
+                return "order_detail";
+            }
+            i++;
+        }
+        return "seckill_fail";
     }
 
 }
