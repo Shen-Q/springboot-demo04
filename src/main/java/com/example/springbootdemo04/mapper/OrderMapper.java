@@ -11,9 +11,11 @@ public interface OrderMapper {
 
     int insertOrderInfo(OrderInfo orderInfo);
 
-//    int insertOrder(SeckillOrder seckillOrder);
+    int insertOrder(SeckillOrder seckillOrder);
 
     SeckillOrder getOrderByUserIdGoodsId(@Param("userId") long userId, @Param("goodsId") long goodsId);
 
     OrderInfo getOrderInfo(@Param("userId") long userId, @Param("goodsId") long goodsId);
+
+    Long getOrderCountByUserId(@Param("userId") long userId);
 }

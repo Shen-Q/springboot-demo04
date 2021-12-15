@@ -12,6 +12,7 @@ import com.example.springbootdemo04.service.RedisService;
 import com.example.springbootdemo04.service.SeckillService;
 import com.example.springbootdemo04.vo.GoodsVO;
 import com.example.springbootdemo04.vo.LoginVO;
+import org.apache.tomcat.jni.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -70,8 +71,9 @@ public class SeckillController implements InitializingBean {
       //      return "";
       //  }
         GoodsVO goodsVO = goodsService.getGoodsVOByGoodsId(goodsId);//这句是用来传给html页面的
-        LoginVO loginVO = (LoginVO) session.getAttribute("loginUser");
+//        LoginVO loginVO = (LoginVO) session.getAttribute("loginUser");
      //加入RabbitMQ后，这里不能直接调用秒杀了，要传数据给queue才行
+        LoginVO loginVO = new LoginVO("18630957677","123456");
 //         OrderInfo orderInfo = seckillService.seckill(loginVO,goodsVO);
 
         //传数据给queue信道
@@ -83,7 +85,9 @@ public class SeckillController implements InitializingBean {
         int i=0;
         while(i<5) {
 //            wait(1000);
+            Time.sleep(1000);
             OrderInfo orderInfo = orderService.getOrderInfo(seckillOrder.getUserId(), goodsId);
+//            Long count = orderService.getOrderCount(seckillOrder.getUserId());
             if (orderInfo != null) {
                 log.info("第"+i+"次时取数据成功，跳转。");
                 model.addAttribute("goods", goodsVO);

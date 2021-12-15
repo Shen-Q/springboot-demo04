@@ -49,10 +49,10 @@ public class MQReceiver {
         }
 
         //判断重复秒杀，这俩是联合主键，如果不判断直接写会报错导致回滚。
-        SeckillOrder order = orderService.getOrderByUserIdGoodsId(userId,goodsId);
-        if(order != null) {
-            return;
-        }
+//        SeckillOrder order = orderService.getOrderByUserIdGoodsId(userId,goodsId);
+//        if(order != null) {
+//            return;
+//        }
         LoginVO loginVO = new LoginVO();
         loginVO.setMobile(String.valueOf(userId));
         //减库存 下订单 写入秒杀订单

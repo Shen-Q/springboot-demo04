@@ -50,4 +50,8 @@ public class OrderService {
     public SeckillOrder getOrderByUserIdGoodsId(long userId,long goodsId){
         return orderMapper.getOrderByUserIdGoodsId(userId,goodsId);
     }
+
+    public Long getOrderCount(long userId) {
+        return orderMapper.getOrderCountByUserId(userId);
+    }
 }
